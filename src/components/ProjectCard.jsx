@@ -87,10 +87,15 @@ export default function ProjectCard({ project, onSelect, layoutType = 'standard'
             </div>
           </div>
 
-          {/* CTA — bordered button style */}
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-[0.16em] text-[#0B1B33] border border-[#0B1B33]/30 px-3 py-1.5 group-hover:border-[#E8752A] group-hover:bg-[#E8752A]/8 group-hover:text-[#E8752A] transition-all duration-300">
-            <span>VIEW PROJECT</span>
-            <ArrowUpRight className="w-3.5 h-3.5 text-[#E8752A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+          {/* CTA — premium bordered button */}
+          <div className="inline-flex items-center gap-0 text-xs font-mono font-semibold uppercase tracking-[0.16em] border border-[#0B1B33]/25 group-hover:border-[#0B1B33] transition-all duration-300 overflow-hidden">
+            <div className="flex items-center gap-2 px-3 py-1.5 group-hover:bg-[#0B1B33] transition-colors duration-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#E8752A] shrink-0 group-hover:animate-pulse"></span>
+              <span className="text-[#0B1B33] group-hover:text-white transition-colors duration-300">VIEW PROJECT</span>
+            </div>
+            <div className="w-7 h-7 flex items-center justify-center border-l border-[#0B1B33]/25 group-hover:border-[#E8752A] group-hover:bg-[#E8752A] transition-all duration-300 shrink-0">
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#E8752A] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+            </div>
           </div>
         </div>
       </div>
