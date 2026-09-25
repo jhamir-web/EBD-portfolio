@@ -57,7 +57,7 @@ export const PROJECTS_DATA = [
     planImage: '/assets/projects/p3-plan.jpg',
     images: [
       { url: '/assets/projects/p3-render.jpg', caption: 'Proposed Architectural 3D Visualization' },
-      { url: '/assets/projects/p3-photo-top.jpg', caption: 'Completed Build — Actual Photo' },
+      { url: '/assets/projects/p3-photo-gate.jpg', caption: 'Completed Build — Actual Photo' },
       { url: '/assets/projects/p3-plan.jpg', caption: 'Site & Architectural Layout' }
     ],
     details: [
