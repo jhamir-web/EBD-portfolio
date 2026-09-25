@@ -68,30 +68,30 @@ export default function ProjectCard({ project, onSelect, layoutType = 'standard'
           </p>
         </div>
 
-        {/* Bottom Metrics & View Action */}
-        <div className="mt-6 pt-4 border-t border-[#0B1B33]/10 flex items-end justify-between">
-          <div className="space-y-1">
-            {project.duration && (
-              <div className="text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/60">
-                <span className="text-[#0B1B33]/40">DURATION: </span>
-                <span className="font-semibold text-[#0B1B33]">{project.duration}</span>
-              </div>
-            )}
-            <div className="text-xs font-mono uppercase tracking-wider">
-              <span className="text-[#0B1B33]/40">
-                {project.cost.includes('Fee') ? 'DESIGN FEE: ' : 'PROJECT COST: '}
-              </span>
-              <span className="font-bold text-[#0B1B33] text-sm">
-                {project.fee ? project.fee : project.cost}
-              </span>
+        {/* Bottom Metrics */}
+        <div className="mt-5 pt-4 border-t border-[#0B1B33]/10 space-y-1 mb-4">
+          {project.duration && (
+            <div className="text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/60">
+              <span className="text-[#0B1B33]/40">DURATION: </span>
+              <span className="font-semibold text-[#0B1B33]">{project.duration}</span>
             </div>
+          )}
+          <div className="text-xs font-mono uppercase tracking-wider">
+            <span className="text-[#0B1B33]/40">
+              {project.cost.includes('Fee') ? 'DESIGN FEE: ' : 'PROJECT COST: '}
+            </span>
+            <span className="font-bold text-[#0B1B33] text-sm">
+              {project.fee ? project.fee : project.cost}
+            </span>
           </div>
+        </div>
 
-          {/* CTA Arrow */}
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold uppercase tracking-[0.16em] text-[#0B1B33] group-hover:text-[#E8752A] transition-colors">
-            <span>VIEW PROJECT</span>
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 text-[#E8752A]" />
-          </div>
+        {/* View Project CTA — full-width button, clearly clickable */}
+        <div className="flex items-center justify-between bg-[#0B1B33] group-hover:bg-[#E8752A] transition-colors duration-300 px-4 py-3 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6">
+          <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-white">
+            View Project
+          </span>
+          <ArrowUpRight className="w-4 h-4 text-[#E8752A] group-hover:text-white transition-colors duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </div>
       </div>
     </article>
