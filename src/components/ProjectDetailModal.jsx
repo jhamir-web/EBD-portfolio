@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, Maximize2, Minimize2, ZoomIn, MapPin, Calendar, DollarSign, Layers, ChevronLeft } from 'lucide-react';
+import { X, ArrowRight, Maximize2, Minimize2, ZoomIn, MapPin, Calendar, DollarSign, Layers } from 'lucide-react';
 
 export default function ProjectDetailModal({ project, onClose, onInquire }) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -25,17 +25,10 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-8 bg-[#0B1B33]/85 backdrop-blur-md animate-in fade-in duration-300">
       <div className="relative w-full h-full sm:h-auto sm:max-h-[92vh] max-w-6xl bg-[#F7F7F5] border border-[#0B1B33]/20 shadow-2xl flex flex-col overflow-hidden">
         
-        {/* Sticky Top Control Bar (Never scrolls out of view on mobile or desktop) */}
-        <div className="sticky top-0 z-30 px-4 sm:px-6 py-3 sm:py-4 bg-white/98 backdrop-blur-md border-b border-[#0B1B33]/15 flex items-center justify-between gap-3 shadow-xs">
-          {/* Project Title & Badge with strict min-w-0 truncation */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-            <button
-              onClick={onClose}
-              className="sm:hidden p-1.5 -ml-1 text-[#0B1B33] hover:text-[#E8752A] transition-colors shrink-0"
-              aria-label="Back to projects"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
+        {/* Sticky Top Control Bar (Always visible, clean and non-redundant) */}
+        <div className="sticky top-0 z-30 px-4 sm:px-6 py-3.5 bg-white/98 backdrop-blur-md border-b border-[#0B1B33]/15 flex items-center justify-between gap-3 shadow-xs">
+          {/* Project Title & Badge with min-w-0 truncation */}
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <span className="font-mono text-[10px] sm:text-xs font-bold text-[#E8752A] bg-[#0B1B33] text-white px-2 py-0.5 shrink-0">
               PROJ {project.num}
             </span>
@@ -44,7 +37,7 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
             </span>
           </div>
 
-          {/* Action & Close Controls */}
+          {/* Controls: Expand + Single Sleek Close Button */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setIsZoomed(!isZoomed)}
@@ -55,16 +48,13 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
               <span>{isZoomed ? 'Fit' : 'Expand'}</span>
             </button>
 
-            {/* High-visibility Close Button for both mobile and desktop */}
+            {/* Single, crisp, architectural Close Button */}
             <button
               onClick={onClose}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-[#0B1B33] text-white hover:bg-[#101F36] border border-[#0B1B33] transition-colors focus:outline-none"
+              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-[#0B1B33] text-white hover:bg-[#101F36] border border-[#0B1B33] hover:border-[#E8752A] transition-colors focus:outline-none shrink-0"
               aria-label="Close Presentation"
             >
               <X className="w-4 h-4 text-[#E8752A]" />
-              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">
-                Close
-              </span>
             </button>
           </div>
         </div>
@@ -155,15 +145,6 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
               >
                 <span>Start a Similar Project</span>
                 <ArrowRight className="w-4 h-4 text-[#E8752A] group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              {/* Convenient Bottom Close Button for Mobile Users */}
-              <button
-                onClick={onClose}
-                className="sm:hidden w-full py-3 bg-white hover:bg-[#F7F7F5] text-[#0B1B33] border border-[#0B1B33]/20 uppercase text-xs tracking-[0.16em] font-mono flex items-center justify-center gap-2 transition-colors"
-              >
-                <X className="w-3.5 h-3.5 text-[#E8752A]" />
-                <span>Return to Projects</span>
               </button>
             </div>
           </div>
