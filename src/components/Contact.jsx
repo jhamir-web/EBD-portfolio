@@ -12,14 +12,84 @@ export default function Contact({ prefilledProject = '' }) {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setErrorMsg('');
+
+    const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    const customEndpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
+
+    try {
+      if (web3FormsKey) {
+        // Submit via Web3Forms (Sends directly to johnervin0709@gmail.com)
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: web3FormsKey,
+            subject: `[E Design & Build] Project Inquiry from ${formData.name}`,
+            from_name: formData.name,
+            to_email: 'johnervin0709@gmail.com',
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || 'Not provided',
+            project_type: formData.projectType,
+            message: formData.message
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setSubmitted(true);
+        } else {
+          throw new Error(result.message || 'Submission failed');
+        }
+      } else if (customEndpoint) {
+        // Submit via custom backend API
+        const response = await fetch(customEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        if (response.ok) {
+          setSubmitted(true);
+        } else {
+          throw new Error('Server returned an error');
+        }
+      } else {
+        // Fallback: Open pre-composed email directly in user's email client
+        const subject = encodeURIComponent(`Project Inquiry: ${formData.projectType} — ${formData.name}`);
+        const body = encodeURIComponent(
+          `Hello E Design & Build,\n\n` +
+          `I would like to inquire about a project.\n\n` +
+          `Name: ${formData.name}\n` +
+          `Email: ${formData.email}\n` +
+          `Phone: ${formData.phone || 'N/A'}\n` +
+          `Project Typology: ${formData.projectType}\n\n` +
+          `Project Details:\n${formData.message}\n`
+        );
+        
+        window.open(`mailto:johnervin0709@gmail.com?subject=${subject}&body=${body}`, '_blank');
+        setSubmitted(true);
+      }
+    } catch (err) {
+      console.error('Contact submission error:', err);
+      // Fallback to mailto on network error
+      const subject = encodeURIComponent(`Project Inquiry: ${formData.projectType} — ${formData.name}`);
+      const body = encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n${formData.message}`
+      );
+      window.open(`mailto:johnervin0709@gmail.com?subject=${subject}&body=${body}`, '_blank');
       setSubmitted(true);
-    }, 600);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const projectTypes = [
@@ -88,8 +158,31 @@ export default function Contact({ prefilledProject = '' }) {
                   <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">
                     EMAIL INQUIRIES
                   </div>
-                  <div className="text-sm font-medium text-[#0B1B33] font-mono">
-                    inquiries@edesignbuild.ph
+                  <a
+                    href="mailto:johnervin0709@gmail.com"
+                    className="text-sm font-medium text-[#0B1B33] font-mono hover:text-[#E8752A] transition-colors"
+                  >
+                    johnervin0709@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A]">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">
+                    DIRECT PHONE / CALL & SMS
+                  </div>
+                  <a
+                    href="tel:09613364683"
+                    className="text-sm font-medium text-[#0B1B33] font-mono hover:text-[#E8752A] transition-colors"
+                  >
+                    0961 336 4683
+                  </a>
+                  <div className="text-[11px] text-[#0B1B33]/50 font-mono">
+                    Available for Viber & direct calls
                   </div>
                 </div>
               </div>

@@ -77,11 +77,16 @@ export default function Footer() {
             <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#E8752A]">
               // LOCATION SPECIFICATION
             </div>
-            <div className="text-xs font-mono text-white/70 space-y-1">
+            <div className="text-xs font-mono text-white/70 space-y-1.5">
               <div>LOCATION: BULACAN, PHILIPPINES</div>
-              <div>COORDINATES: 14°50'N 120°49'E</div>
-              <div className="text-white/50 text-[11px] pt-1">
-                Active Projects across Bulacan, Isabela, and Zamboanga.
+              <div>
+                DIRECT: <a href="tel:09613364683" className="text-white hover:text-[#E8752A] transition-colors">0961 336 4683</a>
+              </div>
+              <div>
+                EMAIL: <a href="mailto:johnervin0709@gmail.com" className="text-white hover:text-[#E8752A] transition-colors">johnervin0709@gmail.com</a>
+              </div>
+              <div className="text-white/40 text-[10px] pt-1">
+                Active Projects: Bulacan • Isabela • Zamboanga
               </div>
             </div>
           </div>
