@@ -19,13 +19,11 @@ export default function Contact({ prefilledProject = '' }) {
     setLoading(true);
     setErrorMsg('');
 
-    // Web3Forms public access key (falls back to registered key if env is absent on static host)
     const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY || '78c4d320-a3b0-43f8-ad4b-cba2a89c2ce9';
     const customEndpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
 
     try {
       if (customEndpoint) {
-        // Submit via custom backend API if provided
         const response = await fetch(customEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -34,7 +32,6 @@ export default function Contact({ prefilledProject = '' }) {
         if (!response.ok) throw new Error('Server returned an error');
         setSubmitted(true);
       } else {
-        // Submit via Web3Forms directly to johnervin0709@gmail.com
         const formPayload = new FormData();
         formPayload.append('access_key', web3FormsKey);
         formPayload.append('subject', `[E Design & Build] Project Inquiry from ${formData.name}`);
@@ -76,64 +73,54 @@ export default function Contact({ prefilledProject = '' }) {
   ];
 
   return (
-    <section id="contact" className="py-24 sm:py-32 bg-[#F7F7F5] relative border-b border-[#0B1B33]/10">
+    <section id="contact" className="py-16 sm:py-24 lg:py-32 bg-[#F7F7F5] relative border-b border-[#0B1B33]/10">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column: Big Editorial CTA Statement */}
-          <div className="lg:col-span-6 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+
+          {/* Left Column: CTA + Contact Info */}
+          <div className="lg:col-span-6 space-y-6">
             <div>
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#E8752A] mb-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#E8752A] mb-3">
                 <span className="w-2 h-[2px] bg-[#E8752A]"></span>
                 05 / INITIATE A PROJECT
               </div>
 
-              <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#0B1B33] leading-[0.92]">
-                LET’S BUILD
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-7xl font-black uppercase tracking-tight text-[#0B1B33] leading-[0.92]">
+                LET'S BUILD
                 <br />
                 <span className="text-[#0B1B33]/85 relative">
                   SOMETHING WELL.
-                  <span className="absolute -bottom-3 left-0 w-24 h-[3px] bg-[#E8752A]"></span>
+                  <span className="absolute -bottom-2 left-0 w-16 sm:w-24 h-[3px] bg-[#E8752A]"></span>
                 </span>
               </h2>
 
-              <p className="mt-8 text-lg sm:text-xl font-light text-[#0B1B33]/80 leading-relaxed max-w-lg">
-                Have a project in mind? Let’s talk about it.
-              </p>
-              <p className="mt-2 text-sm text-[#0B1B33]/60 font-normal leading-relaxed max-w-md">
-                Whether you need architectural blueprints, a bungalow renovation, or an integrated construction partner, our team is ready to review your site parameters.
+              <p className="mt-6 text-base sm:text-lg font-light text-[#0B1B33]/80 leading-relaxed max-w-lg">
+                Have a project in mind? Let's talk about it.
               </p>
             </div>
 
-            {/* Studio Coordinates & Contact Information */}
-            <div className="pt-8 border-t border-[#0B1B33]/15 space-y-5">
+            {/* Contact Info — compact 2-col grid on mobile */}
+            <div className="pt-5 border-t border-[#0B1B33]/15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A]">
+                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A] shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">
-                    STUDIO LOCATION
-                  </div>
-                  <div className="text-sm font-medium text-[#0B1B33]">
-                    Malolos, Bulacan, Philippines
-                  </div>
-                  <div className="text-xs text-[#0B1B33]/60 font-light">
-                    Serving Central Luzon, Greater Manila & Regional Project Sites
-                  </div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">Studio</div>
+                  <div className="text-sm font-medium text-[#0B1B33]">Malolos, Bulacan, Philippines</div>
+                  <div className="text-xs text-[#0B1B33]/60 font-light leading-tight">Central Luzon &amp; Greater Manila</div>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A]">
+                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A] shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">
-                    EMAIL INQUIRIES
-                  </div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">Email</div>
                   <a
                     href="mailto:johnervin0709@gmail.com"
-                    className="text-sm font-medium text-[#0B1B33] font-mono hover:text-[#E8752A] transition-colors"
+                    className="text-sm font-medium text-[#0B1B33] font-mono hover:text-[#E8752A] transition-colors break-all"
                   >
                     johnervin0709@gmail.com
                   </a>
@@ -141,58 +128,48 @@ export default function Contact({ prefilledProject = '' }) {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A]">
+                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A] shrink-0">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">
-                    DIRECT PHONE / CALL & SMS
-                  </div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">Phone / Viber</div>
                   <a
                     href="tel:09613364683"
                     className="text-sm font-medium text-[#0B1B33] font-mono hover:text-[#E8752A] transition-colors"
                   >
                     0961 336 4683
                   </a>
-                  <div className="text-[11px] text-[#0B1B33]/50 font-mono">
-                    Available for Viber & direct calls
-                  </div>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A]">
+                <div className="p-2 bg-white border border-[#0B1B33]/10 text-[#E8752A] shrink-0">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">
-                    CONSULTATION HOURS
-                  </div>
-                  <div className="text-sm font-medium text-[#0B1B33]">
-                    Monday – Saturday, 8:00 AM – 6:00 PM
-                  </div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-[#0B1B33]/50">Hours</div>
+                  <div className="text-sm font-medium text-[#0B1B33]">Mon–Sat, 8AM–6PM</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Architectural Project Form */}
-          <div className="lg:col-span-6 bg-white p-8 sm:p-10 border border-[#0B1B33]/15 shadow-[0_16px_40px_rgba(11,27,51,0.04)] relative">
-            {/* Corner Precision Marker */}
+          {/* Right Column: Form */}
+          <div className="lg:col-span-6 bg-white p-6 sm:p-8 border border-[#0B1B33]/15 shadow-[0_16px_40px_rgba(11,27,51,0.04)] relative">
             <div className="absolute top-3 right-3 text-[9px] font-mono text-[#0B1B33]/40 tracking-wider">
               FORM 2026.A
             </div>
 
             {submitted ? (
-              <div className="py-12 flex flex-col items-center text-center space-y-4">
+              <div className="py-10 flex flex-col items-center text-center space-y-4">
                 <div className="w-14 h-14 bg-[#0B1B33] text-[#E8752A] rounded-full flex items-center justify-center">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="font-display text-2xl font-bold uppercase tracking-tight text-[#0B1B33]">
+                <h3 className="font-display text-xl font-bold uppercase tracking-tight text-[#0B1B33]">
                   Project Inquiry Received
                 </h3>
                 <p className="text-sm text-[#0B1B33]/70 font-light max-w-sm">
-                  Thank you for reaching out to E Design & Build. Our architectural team will review your project parameters and respond promptly.
+                  Thank you for reaching out to E Design &amp; Build. Our team will review your project parameters and respond promptly.
                 </p>
                 <button
                   onClick={() => {
@@ -205,31 +182,33 @@ export default function Contact({ prefilledProject = '' }) {
                       message: ''
                     });
                   }}
-                  className="mt-4 px-6 py-2.5 bg-[#0B1B33] text-white text-xs font-mono uppercase tracking-wider hover:bg-[#101F36] transition-colors"
+                  className="mt-2 px-6 py-2.5 bg-[#0B1B33] text-white text-xs font-mono uppercase tracking-wider hover:bg-[#101F36] transition-colors"
                 >
                   Send Another Inquiry
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Name */}
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-2">
-                    Your Full Name <span className="text-[#E8752A]">*</span>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-1.5">
+                    Full Name <span className="text-[#E8752A]">*</span>
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Architect, Homeowner, or Developer"
-                    className="w-full px-4 py-3 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
+                    placeholder="e.g. Homeowner, Developer"
+                    className="w-full px-4 py-2.5 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
                   />
                 </div>
 
+                {/* Email + Phone side by side */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-2">
-                      Email Address <span className="text-[#E8752A]">*</span>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-1.5">
+                      Email <span className="text-[#E8752A]">*</span>
                     </label>
                     <input
                       type="email"
@@ -237,52 +216,52 @@ export default function Contact({ prefilledProject = '' }) {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="name@example.com"
-                      className="w-full px-4 py-3 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-2">
-                      Contact Phone
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-1.5">
+                      Phone
                     </label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+63 9XX XXX XXXX"
-                      className="w-full px-4 py-3 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
+                {/* Project Type */}
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-2">
-                    Project Typology / Service
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-1.5">
+                    Project Type
                   </label>
                   <select
                     value={formData.projectType}
                     onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
-                    className="w-full px-4 py-3 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors"
                   >
                     {projectTypes.map((pt, i) => (
-                      <option key={i} value={pt}>
-                        {pt}
-                      </option>
+                      <option key={i} value={pt}>{pt}</option>
                     ))}
                   </select>
                 </div>
 
+                {/* Message */}
                 <div>
-                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-2">
-                    Project Details & Site Location <span className="text-[#E8752A]">*</span>
+                  <label className="block text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]/70 mb-1.5">
+                    Project Details &amp; Location <span className="text-[#E8752A]">*</span>
                   </label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     required
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Tell us about your project requirements, location, target timeframe, or any preliminary ideas..."
-                    className="w-full px-4 py-3 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors resize-none"
+                    placeholder="Describe your project, location, and timeframe..."
+                    className="w-full px-4 py-2.5 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors resize-none"
                   ></textarea>
                 </div>
 
@@ -295,7 +274,7 @@ export default function Contact({ prefilledProject = '' }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 px-6 bg-[#0B1B33] text-white hover:bg-[#101F36] uppercase text-xs tracking-[0.2em] font-semibold flex items-center justify-center gap-3 border border-[#0B1B33] hover:border-[#E8752A] transition-all duration-300 group shadow-xs"
+                  className="w-full py-3.5 px-6 bg-[#0B1B33] text-white hover:bg-[#101F36] uppercase text-xs tracking-[0.2em] font-semibold flex items-center justify-center gap-3 border border-[#0B1B33] hover:border-[#E8752A] transition-all duration-300 group"
                 >
                   <span>{loading ? 'TRANSMITTING...' : 'START A CONVERSATION'}</span>
                   <ArrowRight className="w-4 h-4 text-[#E8752A] group-hover:translate-x-1 transition-transform" />

@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import ProjectCard from './ProjectCard';
 import { PROJECTS_DATA } from '../data/projectsData';
-import { Filter, Layers, SlidersHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutGrid, Smartphone, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function Projects({ onSelectProject }) {
   const [activeFilter, setActiveFilter] = useState('ALL');
+  const [mobileViewMode, setMobileViewMode] = useState('swipe'); // 'swipe' | 'grid'
+  const [showAllInGrid, setShowAllInGrid] = useState(false);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const carouselRef = useRef(null);
 
   const categories = [
     { label: 'ALL WORKS (06)', value: 'ALL' },
@@ -18,46 +22,175 @@ export default function Projects({ onSelectProject }) {
     return true;
   });
 
+  const scrollCarousel = (direction) => {
+    if (!carouselRef.current) return;
+    const cardWidth = carouselRef.current.offsetWidth * 0.85;
+    carouselRef.current.scrollBy({
+      left: direction === 'next' ? cardWidth : -cardWidth,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleCarouselScroll = () => {
+    if (!carouselRef.current) return;
+    const scrollLeft = carouselRef.current.scrollLeft;
+    const cardWidth = carouselRef.current.offsetWidth * 0.85;
+    const index = Math.round(scrollLeft / cardWidth);
+    setCurrentSlideIndex(Math.min(Math.max(index, 0), filteredProjects.length - 1));
+  };
+
   return (
-    <section id="projects" className="py-20 sm:py-28 bg-[#F7F7F5] relative border-b border-[#0B1B33]/10">
+    <section id="projects" className="py-14 sm:py-24 bg-[#F7F7F5] relative border-b border-[#0B1B33]/10">
       {/* Editorial Section Anchor Header */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-[#0B1B33]/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#0B1B33]/10">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#E8752A] mb-2">
               <span className="w-2 h-[2px] bg-[#E8752A]"></span>
               01 / SELECTED PROJECTS
             </div>
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#0B1B33]">
+            <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#0B1B33]">
               PORTFOLIO ARCHIVE.
             </h2>
-            <p className="mt-2 text-sm sm:text-base text-[#0B1B33]/70 max-w-lg font-light">
+            <p className="mt-2 text-xs sm:text-base text-[#0B1B33]/70 max-w-lg font-light">
               A curated catalog of built environments, structural renovations, and architectural designs across Luzon and Mindanao.
             </p>
           </div>
 
-          {/* Filter Navigation */}
-          <div className="flex flex-wrap items-center gap-2">
-            {categories.map((cat) => (
+          {/* Filter & View Mode Controls */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            {/* Filter Navigation */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => {
+                    setActiveFilter(cat.value);
+                    setCurrentSlideIndex(0);
+                    if (carouselRef.current) carouselRef.current.scrollTo({ left: 0 });
+                  }}
+                  className={`px-3 py-1.5 text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
+                    activeFilter === cat.value
+                      ? 'bg-[#0B1B33] text-white border-[#0B1B33]'
+                      : 'bg-white text-[#0B1B33]/70 border-[#0B1B33]/15 hover:border-[#0B1B33] hover:text-[#0B1B33]'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile View Switcher (Swipe vs Grid) */}
+            <div className="md:hidden flex items-center bg-white border border-[#0B1B33]/15 p-0.5 self-end sm:self-auto">
               <button
-                key={cat.value}
-                onClick={() => setActiveFilter(cat.value)}
-                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
-                  activeFilter === cat.value
-                    ? 'bg-[#0B1B33] text-white border-[#0B1B33]'
-                    : 'bg-white text-[#0B1B33]/70 border-[#0B1B33]/15 hover:border-[#0B1B33] hover:text-[#0B1B33]'
+                onClick={() => setMobileViewMode('swipe')}
+                className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors flex items-center gap-1 ${
+                  mobileViewMode === 'swipe' ? 'bg-[#0B1B33] text-white' : 'text-[#0B1B33]/60'
                 }`}
+                title="Swipeable Carousel View"
               >
-                {cat.label}
+                <span>Swipe ↔</span>
               </button>
-            ))}
+              <button
+                onClick={() => setMobileViewMode('grid')}
+                className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors flex items-center gap-1 ${
+                  mobileViewMode === 'grid' ? 'bg-[#0B1B33] text-white' : 'text-[#0B1B33]/60'
+                }`}
+                title="Grid List View"
+              >
+                <span>Grid ⊞</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Editorial Masonry Grid */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-          {filteredProjects.map((project, idx) => {
-            // Give 01 and 04 an expansive editorial presentation if in "ALL" view
+        {/* ======================================================== */}
+        {/* MOBILE VIEW 1: HORIZONTAL SWIPEABLE CAROUSEL (Cuts 80% scroll) */}
+        {/* ======================================================== */}
+        {mobileViewMode === 'swipe' && (
+          <div className="md:hidden mt-8">
+            {/* Carousel Track */}
+            <div
+              ref={carouselRef}
+              onScroll={handleCarouselScroll}
+              className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-6 px-6 no-scrollbar touch-pan-x"
+            >
+              {filteredProjects.map((project) => (
+                <div
+                  key={project.id}
+                  className="w-[85vw] max-w-[340px] shrink-0 snap-center"
+                >
+                  <ProjectCard
+                    project={project}
+                    onSelect={onSelectProject}
+                    layoutType="standard"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Carousel Controls & Pagination Bar */}
+            <div className="mt-4 pt-4 border-t border-[#0B1B33]/10 flex items-center justify-between">
+              <div className="text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]">
+                <span className="text-[#E8752A] font-bold">
+                  {String(currentSlideIndex + 1).padStart(2, '0')}
+                </span>
+                <span className="text-[#0B1B33]/40"> / </span>
+                <span>{String(filteredProjects.length).padStart(2, '0')}</span>
+                <span className="text-[#0B1B33]/40 text-[10px] ml-2">SWIPE HORIZONTALLY ↔</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => scrollCarousel('prev')}
+                  className="w-8 h-8 flex items-center justify-center bg-white border border-[#0B1B33]/20 text-[#0B1B33] active:bg-[#0B1B33] active:text-white transition-colors"
+                  aria-label="Previous Project"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => scrollCarousel('next')}
+                  className="w-8 h-8 flex items-center justify-center bg-white border border-[#0B1B33]/20 text-[#0B1B33] active:bg-[#0B1B33] active:text-white transition-colors"
+                  aria-label="Next Project"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* MOBILE VIEW 2: COMPACT GRID (Show 3 + View All Toggle) */}
+        {/* ======================================================== */}
+        {mobileViewMode === 'grid' && (
+          <div className="md:hidden mt-8 space-y-6">
+            {(showAllInGrid ? filteredProjects : filteredProjects.slice(0, 3)).map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onSelect={onSelectProject}
+                layoutType="standard"
+              />
+            ))}
+
+            {filteredProjects.length > 3 && (
+              <button
+                onClick={() => setShowAllInGrid(!showAllInGrid)}
+                className="w-full py-3.5 bg-white text-[#0B1B33] border border-[#0B1B33]/20 uppercase text-xs tracking-[0.16em] font-mono flex items-center justify-center gap-2 hover:bg-[#0B1B33] hover:text-white transition-colors"
+              >
+                <span>{showAllInGrid ? 'Show Fewer Projects' : `View All ${filteredProjects.length} Projects (${filteredProjects.length})`}</span>
+                {showAllInGrid ? <ChevronUp className="w-4 h-4 text-[#E8752A]" /> : <ChevronDown className="w-4 h-4 text-[#E8752A]" />}
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* DESKTOP VIEW: FULL EDITORIAL MASONRY GRID */}
+        {/* ======================================================== */}
+        <div className="hidden md:grid mt-12 grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          {filteredProjects.map((project) => {
             const isExpansive = activeFilter === 'ALL' && (project.id === '01' || project.id === '04');
             return (
               <ProjectCard
@@ -71,12 +204,12 @@ export default function Projects({ onSelectProject }) {
         </div>
 
         {/* Technical Portfolio Footnote */}
-        <div className="mt-14 p-6 bg-white border border-[#0B1B33]/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-[#0B1B33]/70">
+        <div className="mt-10 sm:mt-14 p-5 sm:p-6 bg-white border border-[#0B1B33]/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono text-[#0B1B33]/70">
           <div className="flex items-center gap-3">
-            <span className="w-2 h-2 bg-[#E8752A]"></span>
+            <span className="w-2 h-2 bg-[#E8752A] shrink-0"></span>
             <span>All entries reflect genuine project scopes, client site coordinates, and verified contract parameters.</span>
           </div>
-          <div className="uppercase tracking-widest text-[10px] text-[#0B1B33]/50">
+          <div className="uppercase tracking-widest text-[10px] text-[#0B1B33]/50 shrink-0">
             TOTAL CATALOG: 06 ENTRIES
           </div>
         </div>

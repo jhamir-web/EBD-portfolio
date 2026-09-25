@@ -3,7 +3,7 @@ import { Compass, PenTool, Hammer, CheckSquare } from 'lucide-react';
 
 export default function About() {
   return (
-    <section id="about" className="py-24 sm:py-32 bg-white relative border-b border-[#0B1B33]/10 overflow-hidden">
+    <section id="about" className="py-16 sm:py-24 lg:py-32 bg-white relative border-b border-[#0B1B33]/10 overflow-hidden">
       {/* Subtle Blueprint Grid Accent */}
       <div className="absolute inset-0 bg-grid-subtle pointer-events-none opacity-60"></div>
 
