@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, Maximize2, Minimize2, ZoomIn, MapPin, Calendar, DollarSign, Layers } from 'lucide-react';
+import { X, ArrowRight, Maximize2, Minimize2, ZoomIn, MapPin, Calendar, DollarSign, Layers, ChevronLeft } from 'lucide-react';
 
 export default function ProjectDetailModal({ project, onClose, onInquire }) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -22,20 +22,30 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
   const currentImage = project.images[activeImageIndex] || { url: project.renderImage, caption: 'Project Perspective' };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-8 bg-[#0B1B33]/80 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-8 bg-[#0B1B33]/85 backdrop-blur-md animate-in fade-in duration-300">
       <div className="relative w-full h-full sm:h-auto sm:max-h-[92vh] max-w-6xl bg-[#F7F7F5] border border-[#0B1B33]/20 shadow-2xl flex flex-col overflow-hidden">
-        {/* Top Control Bar */}
-        <div className="px-6 py-4 bg-white border-b border-[#0B1B33]/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs font-bold text-[#E8752A] bg-[#0B1B33] text-white px-2 py-0.5">
+        
+        {/* Sticky Top Control Bar (Never scrolls out of view on mobile or desktop) */}
+        <div className="sticky top-0 z-30 px-4 sm:px-6 py-3 sm:py-4 bg-white/98 backdrop-blur-md border-b border-[#0B1B33]/15 flex items-center justify-between gap-3 shadow-xs">
+          {/* Project Title & Badge with strict min-w-0 truncation */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <button
+              onClick={onClose}
+              className="sm:hidden p-1.5 -ml-1 text-[#0B1B33] hover:text-[#E8752A] transition-colors shrink-0"
+              aria-label="Back to projects"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <span className="font-mono text-[10px] sm:text-xs font-bold text-[#E8752A] bg-[#0B1B33] text-white px-2 py-0.5 shrink-0">
               PROJ {project.num}
             </span>
-            <span className="font-display font-bold uppercase tracking-tight text-xs sm:text-sm text-[#0B1B33] truncate max-w-md sm:max-w-xl">
+            <span className="font-display font-bold uppercase tracking-tight text-xs sm:text-sm text-[#0B1B33] truncate">
               {project.title}
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Action & Close Controls */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setIsZoomed(!isZoomed)}
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#0B1B33]/80 hover:text-[#0B1B33] bg-[#F7F7F5] border border-[#0B1B33]/15 transition-colors"
@@ -45,18 +55,22 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
               <span>{isZoomed ? 'Fit' : 'Expand'}</span>
             </button>
 
+            {/* High-visibility Close Button for both mobile and desktop */}
             <button
               onClick={onClose}
-              className="p-1.5 text-[#0B1B33] hover:text-white hover:bg-[#0B1B33] border border-[#0B1B33]/20 transition-colors focus:outline-none"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-[#0B1B33] text-white hover:bg-[#101F36] border border-[#0B1B33] transition-colors focus:outline-none"
               aria-label="Close Presentation"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 text-[#E8752A]" />
+              <span className="text-[11px] font-mono uppercase tracking-wider font-semibold">
+                Close
+              </span>
             </button>
           </div>
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
           {/* Main Visual Display Area */}
           <div className="lg:col-span-8 flex flex-col space-y-4">
             <div className={`relative bg-[#101F36] border border-[#0B1B33]/15 overflow-hidden flex items-center justify-center transition-all duration-300 ${isZoomed ? 'min-h-[550px]' : 'aspect-[16/10]'}`}>
@@ -67,13 +81,13 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
               />
 
               {/* Technical Caption Pill */}
-              <div className="absolute bottom-3 left-3 bg-[#0B1B33]/90 backdrop-blur-xs text-white text-[11px] font-mono px-3 py-1 border-l-2 border-[#E8752A]">
+              <div className="absolute bottom-3 left-3 right-3 sm:right-auto bg-[#0B1B33]/90 backdrop-blur-xs text-white text-[11px] font-mono px-3 py-1.5 border-l-2 border-[#E8752A] truncate">
                 {currentImage.caption}
               </div>
             </div>
 
             {/* Thumbnail Selectors */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
               {project.images.map((img, idx) => (
                 <button
                   key={idx}
@@ -87,9 +101,9 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
                   <img
                     src={img.url}
                     alt={img.caption}
-                    className="w-16 h-12 sm:w-20 sm:h-14 object-cover"
+                    className="w-14 h-11 sm:w-20 sm:h-14 object-cover"
                   />
-                  <span className="block text-[9px] font-mono text-center text-[#0B1B33]/70 truncate max-w-[80px]">
+                  <span className="block text-[9px] font-mono text-center text-[#0B1B33]/70 truncate max-w-[70px] sm:max-w-[80px]">
                     View {idx + 1}
                   </span>
                 </button>
@@ -130,8 +144,8 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
               </div>
             </div>
 
-            {/* Inquire Action Button */}
-            <div className="pt-4 border-t border-[#0B1B33]/10">
+            {/* Action Buttons */}
+            <div className="pt-4 border-t border-[#0B1B33]/10 space-y-3">
               <button
                 onClick={() => {
                   onClose();
@@ -141,6 +155,15 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
               >
                 <span>Start a Similar Project</span>
                 <ArrowRight className="w-4 h-4 text-[#E8752A] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Convenient Bottom Close Button for Mobile Users */}
+              <button
+                onClick={onClose}
+                className="sm:hidden w-full py-3 bg-white hover:bg-[#F7F7F5] text-[#0B1B33] border border-[#0B1B33]/20 uppercase text-xs tracking-[0.16em] font-mono flex items-center justify-center gap-2 transition-colors"
+              >
+                <X className="w-3.5 h-3.5 text-[#E8752A]" />
+                <span>Return to Projects</span>
               </button>
             </div>
           </div>
