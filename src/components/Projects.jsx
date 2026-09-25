@@ -1,19 +1,17 @@
 import React, { useState, useRef } from 'react';
 import ProjectCard from './ProjectCard';
 import { PROJECTS_DATA } from '../data/projectsData';
-import { ChevronLeft, ChevronRight, LayoutGrid, Smartphone, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Projects({ onSelectProject }) {
   const [activeFilter, setActiveFilter] = useState('ALL');
-  const [mobileViewMode, setMobileViewMode] = useState('swipe'); // 'swipe' | 'grid'
-  const [showAllInGrid, setShowAllInGrid] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const carouselRef = useRef(null);
 
   const categories = [
-    { label: 'ALL WORKS (06)', value: 'ALL' },
-    { label: 'RENOVATION & BUILD (03)', value: 'BUILD' },
-    { label: 'ARCHITECTURAL DESIGN (03)', value: 'DESIGN' },
+    { label: 'ALL (06)', value: 'ALL' },
+    { label: 'BUILD (03)', value: 'BUILD' },
+    { label: 'DESIGN (03)', value: 'DESIGN' },
   ];
 
   const filteredProjects = PROJECTS_DATA.filter((p) => {
@@ -41,8 +39,9 @@ export default function Projects({ onSelectProject }) {
 
   return (
     <section id="projects" className="py-14 sm:py-24 bg-[#F7F7F5] relative border-b border-[#0B1B33]/10">
-      {/* Editorial Section Anchor Header */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+
+        {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#0B1B33]/10">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.25em] text-[#E8752A] mb-2">
@@ -57,138 +56,85 @@ export default function Projects({ onSelectProject }) {
             </p>
           </div>
 
-          {/* Filter & View Mode Controls */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            {/* Filter Navigation */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat.value}
-                  onClick={() => {
-                    setActiveFilter(cat.value);
-                    setCurrentSlideIndex(0);
-                    if (carouselRef.current) carouselRef.current.scrollTo({ left: 0 });
-                  }}
-                  className={`px-3 py-1.5 text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
-                    activeFilter === cat.value
-                      ? 'bg-[#0B1B33] text-white border-[#0B1B33]'
-                      : 'bg-white text-[#0B1B33]/70 border-[#0B1B33]/15 hover:border-[#0B1B33] hover:text-[#0B1B33]'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
+          {/* Filter buttons */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => {
+                  setActiveFilter(cat.value);
+                  setCurrentSlideIndex(0);
+                  if (carouselRef.current) carouselRef.current.scrollTo({ left: 0 });
+                }}
+                className={`px-3 py-1.5 text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
+                  activeFilter === cat.value
+                    ? 'bg-[#0B1B33] text-white border-[#0B1B33]'
+                    : 'bg-white text-[#0B1B33]/70 border-[#0B1B33]/15 hover:border-[#0B1B33] hover:text-[#0B1B33]'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── MOBILE: Swipe carousel only ── */}
+        <div className="md:hidden mt-8">
+          {/* Carousel Track
+              touch-action is NOT set here so the browser default logic applies:
+              a predominantly-vertical swipe scrolls the page normally,
+              a predominantly-horizontal swipe moves the carousel. */}
+          <div
+            ref={carouselRef}
+            onScroll={handleCarouselScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-6 px-6 no-scrollbar overscroll-x-contain"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {filteredProjects.map((project) => (
+              <div
+                key={project.id}
+                className="w-[85vw] max-w-[340px] shrink-0 snap-center"
+              >
+                <ProjectCard
+                  project={project}
+                  onSelect={onSelectProject}
+                  layoutType="standard"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination & nav buttons */}
+          <div className="mt-4 pt-4 border-t border-[#0B1B33]/10 flex items-center justify-between">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]">
+              <span className="text-[#E8752A] font-bold">
+                {String(currentSlideIndex + 1).padStart(2, '0')}
+              </span>
+              <span className="text-[#0B1B33]/40"> / </span>
+              <span>{String(filteredProjects.length).padStart(2, '0')}</span>
+              <span className="text-[#0B1B33]/40 text-[10px] ml-2">SWIPE ↔</span>
             </div>
 
-            {/* Mobile View Switcher (Swipe vs Grid) */}
-            <div className="md:hidden flex items-center bg-white border border-[#0B1B33]/15 p-0.5 self-end sm:self-auto">
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => setMobileViewMode('swipe')}
-                className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors flex items-center gap-1 ${
-                  mobileViewMode === 'swipe' ? 'bg-[#0B1B33] text-white' : 'text-[#0B1B33]/60'
-                }`}
-                title="Swipeable Carousel View"
+                onClick={() => scrollCarousel('prev')}
+                className="w-8 h-8 flex items-center justify-center bg-white border border-[#0B1B33]/20 text-[#0B1B33] active:bg-[#0B1B33] active:text-white transition-colors"
+                aria-label="Previous Project"
               >
-                <span>Swipe ↔</span>
+                <ChevronLeft className="w-4 h-4" />
               </button>
               <button
-                onClick={() => setMobileViewMode('grid')}
-                className={`px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider transition-colors flex items-center gap-1 ${
-                  mobileViewMode === 'grid' ? 'bg-[#0B1B33] text-white' : 'text-[#0B1B33]/60'
-                }`}
-                title="Grid List View"
+                onClick={() => scrollCarousel('next')}
+                className="w-8 h-8 flex items-center justify-center bg-white border border-[#0B1B33]/20 text-[#0B1B33] active:bg-[#0B1B33] active:text-white transition-colors"
+                aria-label="Next Project"
               >
-                <span>Grid ⊞</span>
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* ======================================================== */}
-        {/* MOBILE VIEW 1: HORIZONTAL SWIPEABLE CAROUSEL (Cuts 80% scroll) */}
-        {/* ======================================================== */}
-        {mobileViewMode === 'swipe' && (
-          <div className="md:hidden mt-8">
-            {/* Carousel Track */}
-            <div
-              ref={carouselRef}
-              onScroll={handleCarouselScroll}
-              className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-6 px-6 no-scrollbar touch-pan-x"
-            >
-              {filteredProjects.map((project) => (
-                <div
-                  key={project.id}
-                  className="w-[85vw] max-w-[340px] shrink-0 snap-center"
-                >
-                  <ProjectCard
-                    project={project}
-                    onSelect={onSelectProject}
-                    layoutType="standard"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Carousel Controls & Pagination Bar */}
-            <div className="mt-4 pt-4 border-t border-[#0B1B33]/10 flex items-center justify-between">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-[#0B1B33]">
-                <span className="text-[#E8752A] font-bold">
-                  {String(currentSlideIndex + 1).padStart(2, '0')}
-                </span>
-                <span className="text-[#0B1B33]/40"> / </span>
-                <span>{String(filteredProjects.length).padStart(2, '0')}</span>
-                <span className="text-[#0B1B33]/40 text-[10px] ml-2">SWIPE HORIZONTALLY ↔</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => scrollCarousel('prev')}
-                  className="w-8 h-8 flex items-center justify-center bg-white border border-[#0B1B33]/20 text-[#0B1B33] active:bg-[#0B1B33] active:text-white transition-colors"
-                  aria-label="Previous Project"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => scrollCarousel('next')}
-                  className="w-8 h-8 flex items-center justify-center bg-white border border-[#0B1B33]/20 text-[#0B1B33] active:bg-[#0B1B33] active:text-white transition-colors"
-                  aria-label="Next Project"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ======================================================== */}
-        {/* MOBILE VIEW 2: COMPACT GRID (Show 3 + View All Toggle) */}
-        {/* ======================================================== */}
-        {mobileViewMode === 'grid' && (
-          <div className="md:hidden mt-8 space-y-6">
-            {(showAllInGrid ? filteredProjects : filteredProjects.slice(0, 3)).map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onSelect={onSelectProject}
-                layoutType="standard"
-              />
-            ))}
-
-            {filteredProjects.length > 3 && (
-              <button
-                onClick={() => setShowAllInGrid(!showAllInGrid)}
-                className="w-full py-3.5 bg-white text-[#0B1B33] border border-[#0B1B33]/20 uppercase text-xs tracking-[0.16em] font-mono flex items-center justify-center gap-2 hover:bg-[#0B1B33] hover:text-white transition-colors"
-              >
-                <span>{showAllInGrid ? 'Show Fewer Projects' : `View All ${filteredProjects.length} Projects (${filteredProjects.length})`}</span>
-                {showAllInGrid ? <ChevronUp className="w-4 h-4 text-[#E8752A]" /> : <ChevronDown className="w-4 h-4 text-[#E8752A]" />}
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* ======================================================== */}
-        {/* DESKTOP VIEW: FULL EDITORIAL MASONRY GRID */}
-        {/* ======================================================== */}
+        {/* ── DESKTOP: Full editorial masonry grid ── */}
         <div className="hidden md:grid mt-12 grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
           {filteredProjects.map((project) => {
             const isExpansive = activeFilter === 'ALL' && (project.id === '01' || project.id === '04');
