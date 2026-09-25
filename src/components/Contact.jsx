@@ -25,23 +25,19 @@ export default function Contact({ prefilledProject = '' }) {
     try {
       if (web3FormsKey) {
         // Submit via Web3Forms (Sends directly to johnervin0709@gmail.com)
+        const formPayload = new FormData();
+        formPayload.append('access_key', web3FormsKey);
+        formPayload.append('subject', `[E Design & Build] Project Inquiry from ${formData.name}`);
+        formPayload.append('from_name', formData.name);
+        formPayload.append('name', formData.name);
+        formPayload.append('email', formData.email);
+        formPayload.append('phone', formData.phone || 'Not provided');
+        formPayload.append('project_type', formData.projectType);
+        formPayload.append('message', formData.message);
+
         const response = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          },
-          body: JSON.stringify({
-            access_key: web3FormsKey,
-            subject: `[E Design & Build] Project Inquiry from ${formData.name}`,
-            from_name: formData.name,
-            to_email: 'johnervin0709@gmail.com',
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone || 'Not provided',
-            project_type: formData.projectType,
-            message: formData.message
-          })
+          body: formPayload
         });
 
         const result = await response.json();
