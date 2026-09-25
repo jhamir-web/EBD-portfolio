@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SERVICES_DATA } from '../data/projectsData';
-import { ArrowUpRight } from 'lucide-react';
+
 
 export default function Services({ onSelectService }) {
   const [activeService, setActiveService] = useState(null);
@@ -45,7 +45,7 @@ export default function Services({ onSelectService }) {
                   </div>
 
                   {/* Service Title */}
-                  <div className="col-span-8 md:col-span-5">
+                  <div className="col-span-10 md:col-span-5">
                     <h3 className="font-display text-lg sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-[#0B1B33]">
                       {service.title}
                     </h3>
@@ -72,12 +72,7 @@ export default function Services({ onSelectService }) {
                     </div>
                   </div>
 
-                  {/* Action Arrow */}
-                  <div className="col-span-2 md:col-span-1 flex justify-end">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-[#0B1B33]/15 flex items-center justify-center group-hover:border-[#E8752A] group-hover:bg-[#0B1B33] transition-all duration-300">
-                      <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0B1B33] group-hover:text-[#E8752A] transition-colors" />
-                    </div>
-                  </div>
+
                 </div>
               </div>
             );
