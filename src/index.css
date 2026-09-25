@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --navy-base: #0B1B33;
+    --navy-dark: #101F36;
+    --off-white: #F7F7F5;
+    --light-gray: #E9EBEF;
+    --arch-orange: #E8752A;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--off-white);
+    color: var(--navy-base);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  .font-mono-tech {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Architectural Grid & Technical Pattern Utilities */
+.bg-grid-subtle {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(11, 27, 51, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11, 27, 51, 0.035) 1px, transparent 1px);
+}
+
+.bg-grid-dark {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+.bg-dots-pattern {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(11, 27, 51, 0.12) 1px, transparent 0);
+}
+
+/* Technical Corner Ticks */
+.arch-corner {
+  position: relative;
+}
+.arch-corner::before,
+.arch-corner::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  border-color: rgba(11, 27, 51, 0.25);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F7F7F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #101F36;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E8752A;
+}
+
+/* Smooth Image Transitions */
+.editorial-zoom {
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+.editorial-card:hover .editorial-zoom {
+  transform: scale(1.035);
+}
+
+/* Architectural Crosshair Cursor/Marker */
+.tech-crosshair {
+  position: relative;
+}
+.tech-crosshair::before {
+  content: '+';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #E8752A;
+  opacity: 0.7;
+}
+
+/* Precision Hairline borders */
+.border-hairline {
+  border-width: 1px;
+  border-color: rgba(11, 27, 51, 0.12);
+}
+.border-hairline-dark {
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.1);
+}
