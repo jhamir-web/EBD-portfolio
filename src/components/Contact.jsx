@@ -19,12 +19,22 @@ export default function Contact({ prefilledProject = '' }) {
     setLoading(true);
     setErrorMsg('');
 
-    const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    // Web3Forms public access key (falls back to registered key if env is absent on static host)
+    const web3FormsKey = import.meta.env.VITE_WEB3FORMS_KEY || '78c4d320-a3b0-43f8-ad4b-cba2a89c2ce9';
     const customEndpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
 
     try {
-      if (web3FormsKey) {
-        // Submit via Web3Forms (Sends directly to johnervin0709@gmail.com)
+      if (customEndpoint) {
+        // Submit via custom backend API if provided
+        const response = await fetch(customEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        if (!response.ok) throw new Error('Server returned an error');
+        setSubmitted(true);
+      } else {
+        // Submit via Web3Forms directly to johnervin0709@gmail.com
         const formPayload = new FormData();
         formPayload.append('access_key', web3FormsKey);
         formPayload.append('subject', `[E Design & Build] Project Inquiry from ${formData.name}`);
@@ -46,43 +56,10 @@ export default function Contact({ prefilledProject = '' }) {
         } else {
           throw new Error(result.message || 'Submission failed');
         }
-      } else if (customEndpoint) {
-        // Submit via custom backend API
-        const response = await fetch(customEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-        if (response.ok) {
-          setSubmitted(true);
-        } else {
-          throw new Error('Server returned an error');
-        }
-      } else {
-        // Fallback: Open pre-composed email directly in user's email client
-        const subject = encodeURIComponent(`Project Inquiry: ${formData.projectType} — ${formData.name}`);
-        const body = encodeURIComponent(
-          `Hello E Design & Build,\n\n` +
-          `I would like to inquire about a project.\n\n` +
-          `Name: ${formData.name}\n` +
-          `Email: ${formData.email}\n` +
-          `Phone: ${formData.phone || 'N/A'}\n` +
-          `Project Typology: ${formData.projectType}\n\n` +
-          `Project Details:\n${formData.message}\n`
-        );
-        
-        window.open(`mailto:johnervin0709@gmail.com?subject=${subject}&body=${body}`, '_blank');
-        setSubmitted(true);
       }
     } catch (err) {
       console.error('Contact submission error:', err);
-      // Fallback to mailto on network error
-      const subject = encodeURIComponent(`Project Inquiry: ${formData.projectType} — ${formData.name}`);
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n${formData.message}`
-      );
-      window.open(`mailto:johnervin0709@gmail.com?subject=${subject}&body=${body}`, '_blank');
-      setSubmitted(true);
+      setErrorMsg('Unable to send automatically. Please reach out directly to johnervin0709@gmail.com or 0961 336 4683.');
     } finally {
       setLoading(false);
     }
@@ -308,6 +285,12 @@ export default function Contact({ prefilledProject = '' }) {
                     className="w-full px-4 py-3 bg-[#F7F7F5] border border-[#0B1B33]/15 text-[#0B1B33] text-sm focus:border-[#0B1B33] focus:bg-white focus:outline-none transition-colors resize-none"
                   ></textarea>
                 </div>
+
+                {errorMsg && (
+                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-mono">
+                    {errorMsg}
+                  </div>
+                )}
 
                 <button
                   type="submit"
