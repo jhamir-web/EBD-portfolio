@@ -7,7 +7,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#0B1B33] text-white pt-16 pb-12 border-t border-[#101F36] relative overflow-hidden bg-grid-dark">
+    <footer className="hidden md:block bg-[#0B1B33] text-white pt-16 pb-12 border-t border-[#101F36] relative overflow-hidden bg-grid-dark">
       {/* Hairline subtle orange top line */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#E8752A]/50 to-transparent"></div>
 
