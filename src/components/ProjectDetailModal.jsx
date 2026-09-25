@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowRight, Maximize2, Minimize2, ZoomIn, MapPin, Calendar, DollarSign, Layers } from 'lucide-react';
+import { X, ArrowRight, MapPin, Calendar, DollarSign, Layers } from 'lucide-react';
 
 export default function ProjectDetailModal({ project, onClose, onInquire }) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -25,9 +24,9 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 md:p-8 bg-[#0B1B33]/85 backdrop-blur-md animate-in fade-in duration-300">
       <div className="relative w-full h-full sm:h-auto sm:max-h-[92vh] max-w-6xl bg-[#F7F7F5] border border-[#0B1B33]/20 shadow-2xl flex flex-col overflow-hidden">
         
-        {/* Sticky Top Control Bar (Always visible, clean and non-redundant) */}
+        {/* Sticky Top Control Bar */}
         <div className="sticky top-0 z-30 px-4 sm:px-6 py-3.5 bg-white/98 backdrop-blur-md border-b border-[#0B1B33]/15 flex items-center justify-between gap-3 shadow-xs">
-          {/* Project Title & Badge with min-w-0 truncation */}
+          {/* Project Title & Badge */}
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <span className="font-mono text-[10px] sm:text-xs font-bold text-[#E8752A] bg-[#0B1B33] text-white px-2 py-0.5 shrink-0">
               PROJ {project.num}
@@ -37,33 +36,21 @@ export default function ProjectDetailModal({ project, onClose, onInquire }) {
             </span>
           </div>
 
-          {/* Controls: Expand + Single Sleek Close Button */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => setIsZoomed(!isZoomed)}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono text-[#0B1B33]/80 hover:text-[#0B1B33] bg-[#F7F7F5] border border-[#0B1B33]/15 transition-colors"
-              title="Toggle Full Dimensions"
-            >
-              {isZoomed ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-              <span>{isZoomed ? 'Fit' : 'Expand'}</span>
-            </button>
-
-            {/* Single, crisp, architectural Close Button */}
-            <button
-              onClick={onClose}
-              className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-[#0B1B33] text-white hover:bg-[#101F36] border border-[#0B1B33] hover:border-[#E8752A] transition-colors focus:outline-none shrink-0"
-              aria-label="Close Presentation"
-            >
-              <X className="w-4 h-4 text-[#E8752A]" />
-            </button>
-          </div>
+          {/* Single Sleek Close Button */}
+          <button
+            onClick={onClose}
+            className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-[#0B1B33] text-white hover:bg-[#101F36] border border-[#0B1B33] hover:border-[#E8752A] transition-colors focus:outline-none shrink-0"
+            aria-label="Close Presentation"
+          >
+            <X className="w-4 h-4 text-[#E8752A]" />
+          </button>
         </div>
 
         {/* Modal Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
-          {/* Main Visual Display Area */}
+          {/* Main Visual Display Area (Permanently Expanded for clarity) */}
           <div className="lg:col-span-8 flex flex-col space-y-4">
-            <div className={`relative bg-[#101F36] border border-[#0B1B33]/15 overflow-hidden flex items-center justify-center transition-all duration-300 ${isZoomed ? 'min-h-[550px]' : 'aspect-[16/10]'}`}>
+            <div className="relative bg-[#101F36] border border-[#0B1B33]/15 overflow-hidden flex items-center justify-center min-h-[380px] sm:min-h-[500px] lg:min-h-[540px]">
               <img
                 src={currentImage.url}
                 alt={currentImage.caption}
